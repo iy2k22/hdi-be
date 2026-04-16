@@ -1,0 +1,6 @@
+@Hdi.BE_HostAddress = http://localhost:5098
+
+GET {{Hdi.BE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

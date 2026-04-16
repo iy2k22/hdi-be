@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hdi.BE", "Hdi.BE\Hdi.BE.csproj", "{C23E37C0-A95D-446C-9BC9-02A96C1490E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C23E37C0-A95D-446C-9BC9-02A96C1490E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C23E37C0-A95D-446C-9BC9-02A96C1490E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C23E37C0-A95D-446C-9BC9-02A96C1490E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C23E37C0-A95D-446C-9BC9-02A96C1490E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
