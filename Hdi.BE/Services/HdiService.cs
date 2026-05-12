@@ -37,13 +37,14 @@ public class HdiService : IHdiService
         return result;
     }
 
-    public async Task<List<ScoreListCountry>> GetScoreListCountries()
+    public async Task<List<ScoreListCountry>> GetScoreListCountries(int continent, bool isMuslim)
     {
         var countries = await _repository.GetCountries();
         var scores = await _repository.GetScores();
 
         var result = (from c in countries
             join s in scores on c.Id equals s.Country
+            where ((continent == 0 || c.Continent == continent) && (!isMuslim || c.IsMuslim))
             orderby s.ScoreValue descending
             select new ScoreListCountry
             {

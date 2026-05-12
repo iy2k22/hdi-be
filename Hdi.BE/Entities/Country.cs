@@ -7,4 +7,5 @@ public class Country
     public int Continent { get; set; }
     public string Flag1 { get; set; }
     public string Flag2 { get; set; }
+    public bool IsMuslim { get; set; }
 }

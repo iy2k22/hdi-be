@@ -68,9 +68,9 @@ public class HdiController : ControllerBase
 
     [HttpGet]
     [Route("GetScoreListCountry")]
-    public async Task<ActionResult<List<ScoreListCountry>>> GetScoreListCountry()
+    public async Task<ActionResult<List<ScoreListCountry>>> GetScoreListCountry(int continent, bool isMuslim)
     {
-        var result = await _hdiService.GetScoreListCountries();
+        var result = await _hdiService.GetScoreListCountries(continent, isMuslim);
         return Ok(result);
     }
 }
