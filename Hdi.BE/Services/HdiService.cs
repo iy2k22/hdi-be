@@ -37,14 +37,14 @@ public class HdiService : IHdiService
         return result;
     }
 
-    public async Task<List<ScoreListCountry>> GetScoreListCountries(int continent, bool isMuslim)
+    public async Task<List<ScoreListCountry>> GetScoreListCountries(int continent, bool isMuslim, int year, int scoreType)
     {
         var countries = await _repository.GetCountries();
         var scores = await _repository.GetScores();
 
         var result = (from c in countries
             join s in scores on c.Id equals s.Country
-            where ((continent == 0 || c.Continent == continent) && (!isMuslim || c.IsMuslim))
+            where ((continent == 0 || c.Continent == continent) && (!isMuslim || c.IsMuslim) && s.Year == year &&  s.ScoreType == scoreType)
             orderby s.ScoreValue descending
             select new ScoreListCountry
             {
@@ -52,6 +52,58 @@ public class HdiService : IHdiService
                 Score = s.ScoreValue,
                 Flag = $"&#x{c.Flag1};&#x{c.Flag2};"
             }).ToList();
+        return result;
+    }
+
+    public async Task<Dictionary<int, string>> GetCountryNames()
+    {
+        Dictionary<int, string> result = new Dictionary<int, string>();
+        
+        var countries = await _repository.GetCountries();
+        foreach (Country country in countries)
+        {
+            result.Add(country.Id, country.Name);
+        }
+        
+        return result;
+    }
+
+    public async Task<List<string>> GetCountryNamesOnly()
+    {
+        var countries = await _repository.GetCountries();
+        var result = (from c in countries
+            orderby c.Name
+            select c.Name).ToList();
+        return result;
+    }
+
+    public async Task<Score?> GetScore(int country, int year, int scoreType)
+    {
+        var result = await _repository.GetScore(country, year, scoreType);
+        return result;
+    }
+
+    public async Task<int> UpdateScore(Score score)
+    {
+        var result = await _repository.UpdateScore(score);
+        return result;
+    }
+
+    public async Task<Country?> GetCountry(string countryName)
+    {
+        var result = await _repository.GetCountry(countryName);
+        return result;
+    }
+
+    public async Task<int> UpdateCountry(Country country)
+    {
+        var result = await _repository.UpdateCountry(country);
+        return result;
+    }
+
+    public async Task<List<ScoreType>> GetScoreTypes()
+    {
+        var result = await _repository.GetScoreTypes();
         return result;
     }
 }

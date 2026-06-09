@@ -8,4 +8,5 @@ public class Score
     public int Country { get; set; }
     public double ScoreValue { get; set; }
     public int Year { get; set; }
+    public int ScoreType { get; set; }
 }

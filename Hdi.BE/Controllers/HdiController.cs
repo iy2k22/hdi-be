@@ -37,8 +37,15 @@ public class HdiController : ControllerBase
     [Route("CreateCountry")]
     public async Task<ActionResult<int>> CreateCountry(Country country)
     {
-        var result = await  _hdiService.CreateCountry(country);
-        return Ok(result);
+        try
+        {
+            var result = await _hdiService.CreateCountry(country);
+            return Created();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpGet]
@@ -59,18 +66,107 @@ public class HdiController : ControllerBase
     }
 
     [HttpPost]
-    [Route("AddScore")]
-    public async Task<ActionResult<int>> AddScore(Score score)
+    [Route("AddScores")]
+    public async Task<ActionResult<int>> AddScore(List<ScoreAdd> scores)
     {
-        var result = await _hdiService.AddScore(score);
-        return Ok(result);
+        List<Score> adds = (from s in scores
+            where !s.Editing
+            select new Score
+            {
+                Id = s.Id,
+                Country = s.Country,
+                ScoreType = s.ScoreType,
+                ScoreValue = s.ScoreValue,
+                Year = s.Year
+            }).ToList();
+        List<Score> edits = (from s in scores
+            where s.Editing
+            select new Score
+            {
+                Id = s.Id,
+                Country = s.Country,
+                ScoreType = s.ScoreType,
+                ScoreValue = s.ScoreValue,
+                Year = s.Year
+            }).ToList();
+
+        try
+        {
+            foreach (Score s in adds)
+                await _hdiService.AddScore(s);
+            foreach (Score s in edits)
+                await _hdiService.UpdateScore(s);
+            
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        
     }
 
     [HttpGet]
     [Route("GetScoreListCountry")]
-    public async Task<ActionResult<List<ScoreListCountry>>> GetScoreListCountry(int continent, bool isMuslim)
+    public async Task<ActionResult<List<ScoreListCountry>>> GetScoreListCountry(int continent, bool isMuslim, int year, int scoreType)
     {
-        var result = await _hdiService.GetScoreListCountries(continent, isMuslim);
+        var result = await _hdiService.GetScoreListCountries(continent, isMuslim, year, scoreType);
         return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetCountryNames")]
+    public async Task<ActionResult<Dictionary<int, string>>> GetCountryNames()
+    {
+        var result = await _hdiService.GetCountryNames();
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetScore")]
+    public async Task<ActionResult<Score?>> GetScore(int country, int year, int scoreType)
+    {
+        var result = await _hdiService.GetScore(country, year, scoreType);
+        return Ok(result);
+    }
+
+    [HttpPatch]
+    [Route("UpdateScore")]
+    public async Task<ActionResult<int>> UpdateScore(Score score)
+    {
+        var result = await _hdiService.UpdateScore(score);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetCountryNamesOnly")]
+    public async Task<ActionResult<List<string>>> GetCountryNamesOnly()
+    {
+        var result = await _hdiService.GetCountryNamesOnly();
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetCountry")]
+    public async Task<ActionResult<Country?>> GetCountry(string countryName)
+    {
+        var result = await _hdiService.GetCountry(countryName);
+        return Ok(result);
+    }
+
+    [HttpPatch]
+    [Route("UpdateCountry")]
+    public async Task<ActionResult<int>> UpdateCountry(Country country)
+    {
+        var result = await _hdiService.UpdateCountry(country);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetScoreTypes")]
+    public async Task<List<ScoreType>> GetScoreTypes()
+    {
+        var result = await _hdiService.GetScoreTypes();
+        return result;
     }
 }

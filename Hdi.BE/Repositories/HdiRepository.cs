@@ -39,4 +39,31 @@ public class HdiRepository : IHdiRepository
     {
         return await _dbContext.Scores.ToListAsync();
     }
+
+    public async Task<Score?> GetScore(int country, int year, int scoreType)
+    {
+        return await _dbContext.Scores.FirstOrDefaultAsync(s => s.Country == country && s.Year == year && s.ScoreType == scoreType);
+    }
+
+    public async Task<int> UpdateScore(Score score)
+    {
+        _dbContext.Scores.Update(score);
+        return await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<Country?> GetCountry(string countryName)
+    {
+        return await _dbContext.Countries.FirstOrDefaultAsync(c => c.Name == countryName);
+    }
+
+    public async Task<int> UpdateCountry(Country country)
+    {
+        _dbContext.Countries.Update(country);
+        return await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<ScoreType>> GetScoreTypes()
+    {
+        return await _dbContext.ScoreTypes.ToListAsync();
+    }
 }
