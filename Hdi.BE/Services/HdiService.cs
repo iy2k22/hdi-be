@@ -106,4 +106,16 @@ public class HdiService : IHdiService
         var result = await _repository.GetScoreTypes();
         return result;
     }
+
+    public async Task<int> AddScoreType(ScoreType scoreType)
+    {
+        var result = await _repository.AddScoreType(scoreType);
+        return result;
+    }
+
+    public async Task<int> UpdateScoreType(ScoreType scoreType)
+    {
+        var result = await _repository.UpdateScoreType(scoreType);
+        return result;
+    }
 }

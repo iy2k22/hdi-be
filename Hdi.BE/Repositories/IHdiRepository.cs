@@ -14,4 +14,6 @@ public interface IHdiRepository
     public Task<Country?> GetCountry(string countryName);
     public Task<int> UpdateCountry(Country country);
     public Task<List<ScoreType>> GetScoreTypes();
+    public Task<int> AddScoreType(ScoreType scoreType);
+    public Task<int> UpdateScoreType(ScoreType scoreType);
 }

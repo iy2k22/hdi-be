@@ -8,4 +8,5 @@ public class ScoreType
    public double Max {get; set;}
    public double Step { get; set; }
    public int Round {get; set;}
+   public bool Ascending { get; set; }
 }

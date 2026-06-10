@@ -64,6 +64,18 @@ public class HdiRepository : IHdiRepository
 
     public async Task<List<ScoreType>> GetScoreTypes()
     {
-        return await _dbContext.ScoreTypes.ToListAsync();
+        return await _dbContext.ScoreTypes.OrderBy(x => x.Id).ToListAsync();
+    }
+
+    public async Task<int> AddScoreType(ScoreType scoreType)
+    {
+        await _dbContext.ScoreTypes.AddAsync(scoreType);
+        return await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<int> UpdateScoreType(ScoreType scoreType)
+    {
+        _dbContext.ScoreTypes.Update(scoreType);
+        return await _dbContext.SaveChangesAsync();
     }
 }

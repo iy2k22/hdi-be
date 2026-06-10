@@ -164,9 +164,54 @@ public class HdiController : ControllerBase
 
     [HttpGet]
     [Route("GetScoreTypes")]
-    public async Task<List<ScoreType>> GetScoreTypes()
+    public async Task<ActionResult<List<ScoreType>>> GetScoreTypes()
     {
         var result = await _hdiService.GetScoreTypes();
-        return result;
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("UploadScoreTypes")]
+    public async Task<ActionResult<int>> UploadScoreTypes(List<ScoreTypeAddDTO> scoreTypes)
+    {
+        try
+        {
+            List<ScoreType> adding = (from s in scoreTypes
+                where !s.Editing
+                select new ScoreType
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Min = s.Min,
+                    Max = s.Max,
+                    Step = s.Step,
+                    Round = s.Round,
+                    Ascending = s.Ascending
+                }).ToList();
+
+            List<ScoreType> editing = (from s in scoreTypes
+                where s.Editing
+                select new ScoreType
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Min = s.Min,
+                    Max = s.Max,
+                    Step = s.Step,
+                    Round = s.Round,
+                    Ascending = s.Ascending
+                }).ToList();
+
+            foreach (ScoreType s in adding)
+                await _hdiService.AddScoreType(s);
+            foreach (ScoreType s in editing)
+                await _hdiService.UpdateScoreType(s);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
