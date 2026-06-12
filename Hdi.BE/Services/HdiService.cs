@@ -39,20 +39,25 @@ public class HdiService : IHdiService
 
     public async Task<List<ScoreListCountry>> GetScoreListCountries(int continent, bool isMuslim, int year, int scoreType)
     {
+        bool ascending = await _repository.GetScoreTypeAscending(scoreType);
+        
         var countries = await _repository.GetCountries();
         var scores = await _repository.GetScores();
 
         var result = (from c in countries
             join s in scores on c.Id equals s.Country
-            where ((continent == 0 || c.Continent == continent) && (!isMuslim || c.IsMuslim) && s.Year == year &&  s.ScoreType == scoreType)
-            orderby s.ScoreValue descending
+            where ((continent == 0 || c.Continent == continent) && (!isMuslim || c.IsMuslim) && s.Year == year &&
+                   s.ScoreType == scoreType)
             select new ScoreListCountry
             {
                 Name = c.Name,
                 Score = s.ScoreValue,
                 Flag = $"&#x{c.Flag1};&#x{c.Flag2};"
-            }).ToList();
-        return result;
+            });
+        
+        result = ascending ? result.OrderBy(s => s.Score) : result.OrderByDescending(s => s.Score);
+        
+        return result.ToList();
     }
 
     public async Task<Dictionary<int, string>> GetCountryNames()

@@ -78,4 +78,10 @@ public class HdiRepository : IHdiRepository
         _dbContext.ScoreTypes.Update(scoreType);
         return await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> GetScoreTypeAscending(int scoreType)
+    {
+        ScoreType? s = await _dbContext.ScoreTypes.FirstOrDefaultAsync(s => s.Id == scoreType);
+        return s == null ? false : s.Ascending;
+    }
 }

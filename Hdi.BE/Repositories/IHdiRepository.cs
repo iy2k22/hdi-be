@@ -16,4 +16,5 @@ public interface IHdiRepository
     public Task<List<ScoreType>> GetScoreTypes();
     public Task<int> AddScoreType(ScoreType scoreType);
     public Task<int> UpdateScoreType(ScoreType scoreType);
+    public Task<bool> GetScoreTypeAscending(int scoreType);
 }
