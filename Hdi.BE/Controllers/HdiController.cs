@@ -3,6 +3,7 @@ using Hdi.BE.Entities;
 using Hdi.BE.Repositories;
 using Hdi.BE.Services;
 using Microsoft.AspNetCore.Mvc;
+using Hdi.BE.HelperMethods;
 
 namespace Hdi.BE.Controllers;
 
@@ -34,13 +35,24 @@ public class HdiController : ControllerBase
     }
 
     [HttpPost]
-    [Route("CreateCountry")]
-    public async Task<ActionResult<int>> CreateCountry(Country country)
+    [Route("AddCountries")]
+    public async Task<ActionResult<int>> AddCountries(List<CountryAddDTO> countries)
     {
         try
         {
-            var result = await _hdiService.CreateCountry(country);
-            return Created();
+            List<Country> adding = (from c in countries
+                    where !c.Editing
+                    select Helpers.ConvertDTOToCountry(c)).ToList();
+            List<Country> editing = (from c in countries
+                where c.Editing
+                select Helpers.ConvertDTOToCountry(c)).ToList();
+
+            foreach (Country c in adding)
+                await _hdiService.CreateCountry(c);
+            foreach (Country c in editing)
+                await _hdiService.UpdateCountry(c);
+
+            return Ok();
         }
         catch (Exception ex)
         {
